@@ -9,7 +9,7 @@
         $renderedEntries = $activityTimeline->getStaticEntries();
     @endphp
 
-    <div class="fi-ta">
+    <div class="fi-at">
         <x-filament::section
             :heading="$activityTimeline->getStaticHeading()"
             :description="$activityTimeline->getStaticDescription()"

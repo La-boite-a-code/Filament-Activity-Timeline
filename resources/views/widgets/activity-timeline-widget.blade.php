@@ -1,7 +1,7 @@
-<div class="fi-ta">
+<div class="fi-at">
     <x-filament::section
-        :heading="$heading"
-        :description="filled($description) ? $description : null"
+        :heading="$sectionHeading"
+        :description="filled($sectionDescription) ? $sectionDescription : null"
         icon="heroicon-o-clock"
     >
         @if ($showFilters)
@@ -15,11 +15,11 @@
         @else
             @include('filament-activity-timeline::components.timeline', [
                 'renderedEntries' => $renderedEntries,
-                'debug' => $debug,
+                'debug' => $showDebug,
             ])
 
             @if ($hasMore)
-                <div class="fi-ta-load-more">
+                <div class="fi-at-load-more">
                     <x-filament::button
                         color="gray"
                         outlined

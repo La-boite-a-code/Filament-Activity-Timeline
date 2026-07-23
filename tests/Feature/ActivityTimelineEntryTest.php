@@ -57,7 +57,7 @@ it('renders the interactive entry as the nested timeline widget in a schema', fu
     Livewire::test(InfolistHostComponent::class, ['record' => $order])
         ->assertOk()
         ->assertSee('Alexandre a modifie CMD-2026-0184')
-        ->assertSeeHtml('fi-ta');
+        ->assertSeeHtml('fi-at');
 });
 
 it('renders a read only static list without load more or filters', function (): void {

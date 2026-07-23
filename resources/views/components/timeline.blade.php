@@ -1,4 +1,4 @@
-<ol role="list" class="fi-ta-list">
+<ol role="list" class="fi-at-list">
     @foreach ($renderedEntries as $rendered)
         @include('filament-activity-timeline::components.timeline-entry', [
             'rendered' => $rendered,

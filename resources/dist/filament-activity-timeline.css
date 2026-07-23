@@ -1,49 +1,69 @@
 /*
  * Filament Activity Timeline
  *
- * Only the timeline specific scaffolding lives here: the vertical line, the
- * event dots and the change layout. Everything generic (card, badges, buttons,
- * tabs, empty state, avatars) is rendered with native Filament components, so it
- * inherits Filament's palette and dark mode automatically. Colors below hook
- * into Filament's own CSS custom properties, with neutral fallbacks.
+ * Only the timeline specific scaffolding lives here: the rail, the event dots,
+ * the entry layout and the change chips. Everything generic (section, badges,
+ * tabs, empty state, avatars) is rendered with native Filament components.
+ *
+ * Every color below reuses a Filament v4 core recipe, variable for variable,
+ * so any custom theme flows through unchanged:
+ *
+ * - dots ........... the `.fi-modal-icon-bg` tinted circle recipe, scoped with
+ *                    the core `.fi-color-{name}` custom properties
+ * - old chip ....... the `.fi-badge` gray recipe
+ * - new chip ....... the `.fi-badge` gray recipe with heading-strength text
+ * - rail, panels ... the `.fi-section` hairline ring pair
+ * - texts .......... the section heading and description color pairs
  */
 
-.fi-ta-list {
+/* Filters ------------------------------------------------------------ */
+
+.fi-at-filters {
+    margin-bottom: 1.25rem;
+}
+
+/* Rail and entries ---------------------------------------------------- */
+
+.fi-at-list {
     position: relative;
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: 1.625rem;
     margin: 0;
     padding: 0;
     list-style: none;
 }
 
-.fi-ta-entry {
+.fi-at-entry {
     position: relative;
     display: grid;
-    grid-template-columns: 2rem 1fr;
-    gap: 0.75rem;
+    grid-template-columns: 2rem minmax(0, 1fr);
+    column-gap: 0.875rem;
 }
 
-.fi-ta-line {
+.fi-at-line {
     position: absolute;
-    top: 2rem;
-    bottom: -1.5rem;
+    top: 2.25rem;
+    bottom: -1.375rem;
     left: 1rem;
-    width: 2px;
+    width: 1px;
     transform: translateX(-50%);
-    background-color: rgb(var(--gray-200, 229 231 235));
+    background-color: var(--gray-200);
 }
 
-.fi-ta-entry:last-child .fi-ta-line {
+.fi-at-entry:last-child .fi-at-line {
     display: none;
 }
 
-.dark .fi-ta-line {
-    background-color: rgb(var(--gray-700, 55 65 81));
+.dark .fi-at-line {
+    background-color: color-mix(in oklab, var(--color-white) 10%, transparent);
 }
 
-.fi-ta-dot {
+/* Event dots ----------------------------------------------------------- */
+/* The `.fi-modal-icon-bg` recipe: gray by default, `.fi-color-{name}` scoped
+   custom properties otherwise, with a gray fallback for unregistered names. */
+
+.fi-at-dot {
     position: relative;
     z-index: 1;
     display: inline-flex;
@@ -52,145 +72,288 @@
     width: 2rem;
     height: 2rem;
     border-radius: 9999px;
-    background-color: rgb(var(--gray-50, 249 250 251));
-    border: 1px solid currentColor;
-    color: rgb(var(--gray-400, 156 163 175));
+    background-color: var(--gray-100);
+    color: var(--gray-500);
 }
 
-.dark .fi-ta-dot {
-    background-color: rgb(var(--gray-900, 17 24 39));
+.dark .fi-at-dot {
+    background-color: color-mix(in oklab, var(--gray-500) 20%, transparent);
+    color: var(--gray-400);
 }
 
-.fi-ta-dot .fi-icon {
-    width: 1.1rem;
-    height: 1.1rem;
+.fi-at-dot.fi-color {
+    background-color: var(--color-100, var(--gray-100));
+    color: var(--color-600, var(--gray-500));
 }
 
-.fi-ta-dot--success { color: rgb(var(--success-500, 34 197 94)); }
-.fi-ta-dot--warning { color: rgb(var(--warning-500, 245 158 11)); }
-.fi-ta-dot--danger { color: rgb(var(--danger-500, 239 68 68)); }
-.fi-ta-dot--info { color: rgb(var(--info-500, 14 165 233)); }
-.fi-ta-dot--primary { color: rgb(var(--primary-500, 59 130 246)); }
+.dark .fi-at-dot.fi-color {
+    background-color: color-mix(in oklab, var(--color-500, var(--gray-500)) 20%, transparent);
+    color: var(--color-400, var(--gray-400));
+}
 
-.fi-ta-body {
+.fi-at-dot .fi-icon {
+    width: 1rem;
+    height: 1rem;
+}
+
+.fi-at-dot-core {
+    width: 0.375rem;
+    height: 0.375rem;
+    border-radius: 9999px;
+    background-color: currentColor;
+}
+
+/* Entry body ----------------------------------------------------------- */
+
+.fi-at-body {
     min-width: 0;
-    padding-bottom: 0.25rem;
+    padding-top: 0.3125rem;
 }
 
-.fi-ta-sentence {
-    font-size: 0.875rem;
-    line-height: 1.35rem;
-    color: rgb(var(--gray-950, 3 7 18));
+.fi-at-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.75rem;
 }
 
-.dark .fi-ta-sentence {
-    color: rgb(var(--gray-100, 243 244 246));
+.fi-at-sentence {
+    font-size: var(--text-sm);
+    font-weight: var(--font-weight-medium);
+    line-height: 1.375rem;
+    color: var(--gray-950);
+    overflow-wrap: anywhere;
 }
 
-.fi-ta-meta {
+.dark .fi-at-sentence {
+    color: var(--color-white);
+}
+
+.fi-at-event-badge {
+    flex-shrink: 0;
+    margin-top: 0.125rem;
+}
+
+.fi-at-meta {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: 0.375rem;
+    gap: 0.4375rem;
     margin-top: 0.25rem;
-    font-size: 0.75rem;
-    color: rgb(var(--gray-500, 107 114 128));
+    font-size: var(--text-xs);
+    line-height: 1rem;
+    color: var(--gray-500);
 }
 
-.dark .fi-ta-meta {
-    color: rgb(var(--gray-400, 156 163 175));
+.dark .fi-at-meta {
+    color: var(--gray-400);
 }
 
-.fi-ta-sep {
-    opacity: 0.6;
+.fi-at-avatar {
+    width: 1.25rem;
+    height: 1.25rem;
 }
 
-.fi-ta-entry-description {
+.fi-at-causer {
+    font-weight: var(--font-weight-medium);
+}
+
+.fi-at-sep {
+    width: 0.1875rem;
+    height: 0.1875rem;
+    border-radius: 9999px;
+    background-color: currentColor;
+    opacity: 0.5;
+}
+
+.fi-at-entry-description {
     margin-top: 0.375rem;
     font-size: 0.8125rem;
-    color: rgb(var(--gray-500, 107 114 128));
+    line-height: 1.25rem;
+    color: var(--gray-500);
 }
 
-.dark .fi-ta-entry-description {
-    color: rgb(var(--gray-400, 156 163 175));
+.dark .fi-at-entry-description {
+    color: var(--gray-400);
 }
 
-/* Changes ------------------------------------------------------------ */
+/* Changes -------------------------------------------------------------- */
 
-.fi-ta-changes {
+.fi-at-changes {
     margin-top: 0.625rem;
+    padding: 0.625rem 0.75rem;
+    border-radius: var(--radius-lg);
+    box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--gray-950) 5%, transparent);
 }
 
-.fi-ta-changes-count {
+.dark .fi-at-changes {
+    box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--color-white) 10%, transparent);
+}
+
+.fi-at-changes-count {
+    margin-bottom: 0.5rem;
     font-size: 0.6875rem;
-    font-weight: 600;
+    font-weight: var(--font-weight-medium);
+    line-height: 1;
     text-transform: uppercase;
-    letter-spacing: 0.03em;
-    color: rgb(var(--gray-500, 107 114 128));
-    margin-bottom: 0.375rem;
+    letter-spacing: 0.05em;
+    color: var(--gray-500);
 }
 
-.fi-ta-changes-list {
-    display: flex;
-    flex-direction: column;
-    gap: 0.375rem;
+.dark .fi-at-changes-count {
+    color: var(--gray-400);
+}
+
+.fi-at-changes-list {
+    display: grid;
+    grid-template-columns: max-content minmax(0, 1fr);
+    gap: 0.4375rem 1rem;
     margin: 0;
     padding: 0;
     list-style: none;
 }
 
-.fi-ta-change {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.375rem 0.5rem;
-    font-size: 0.8125rem;
+.fi-at-change {
+    display: grid;
+    grid-column: 1 / -1;
+    grid-template-columns: subgrid;
+    align-items: baseline;
 }
 
-.fi-ta-change-label {
-    font-weight: 600;
-    color: rgb(var(--gray-500, 107 114 128));
+.fi-at-change-label {
+    font-size: var(--text-xs);
+    font-weight: var(--font-weight-medium);
+    color: var(--gray-500);
 }
 
-.dark .fi-ta-change-label {
-    color: rgb(var(--gray-400, 156 163 175));
+.dark .fi-at-change-label {
+    color: var(--gray-400);
 }
 
-.fi-ta-change-values {
+.fi-at-change-values {
     display: inline-flex;
     flex-wrap: wrap;
     align-items: center;
     gap: 0.375rem;
+    min-width: 0;
 }
 
-.fi-ta-arrow {
-    width: 1rem;
-    height: 1rem;
-    color: rgb(var(--gray-400, 156 163 175));
+/* The `.fi-badge` gray recipe, in both modes. */
+
+.fi-at-chip {
+    display: inline-flex;
+    align-items: center;
+    max-width: 100%;
+    padding: 0.125rem 0.5rem;
+    border-radius: var(--radius-md);
+    font-size: var(--text-xs);
+    line-height: 1.125rem;
+    font-variant-numeric: tabular-nums;
+    overflow-wrap: anywhere;
+    background-color: var(--gray-50);
+    box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--gray-600) 10%, transparent);
 }
 
-.fi-ta-load-more {
+.dark .fi-at-chip {
+    background-color: color-mix(in oklab, var(--gray-400) 10%, transparent);
+    box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--gray-400) 20%, transparent);
+}
+
+.fi-at-chip--old {
+    color: var(--gray-600);
+    text-decoration-line: line-through;
+    text-decoration-color: color-mix(in oklab, currentColor 40%, transparent);
+}
+
+.dark .fi-at-chip--old {
+    color: var(--gray-200);
+}
+
+.fi-at-chip--new {
+    font-weight: var(--font-weight-medium);
+    color: var(--gray-950);
+    background-color: var(--color-white);
+    box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--gray-950) 10%, transparent);
+}
+
+.dark .fi-at-chip--new {
+    color: var(--color-white);
+    background-color: color-mix(in oklab, var(--color-white) 5%, transparent);
+    box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--color-white) 20%, transparent);
+}
+
+/* The `.fi-color-gray` icon pair. */
+
+.fi-at-arrow {
+    flex-shrink: 0;
+    width: 0.875rem;
+    height: 0.875rem;
+    color: var(--gray-500);
+}
+
+.dark .fi-at-arrow {
+    color: var(--gray-400);
+}
+
+/* Load more ------------------------------------------------------------ */
+
+.fi-at-load-more {
     display: flex;
     justify-content: center;
-    margin-top: 1.25rem;
+    margin-top: 1.5rem;
 }
 
-.fi-ta-sr-only {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    white-space: nowrap;
-    border: 0;
+/* Debug ---------------------------------------------------------------- */
+
+.fi-at-debug {
+    margin-top: 0.625rem;
+    font-size: 0.6875rem;
+    color: var(--gray-500);
 }
+
+.dark .fi-at-debug {
+    color: var(--gray-400);
+}
+
+.fi-at-debug summary {
+    cursor: pointer;
+    user-select: none;
+}
+
+.fi-at-debug pre {
+    margin-top: 0.375rem;
+    padding: 0.625rem 0.75rem;
+    border-radius: var(--radius-lg);
+    overflow-x: auto;
+    font-size: 0.6875rem;
+    line-height: 1rem;
+    background-color: var(--gray-50);
+    box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--gray-950) 5%, transparent);
+}
+
+.dark .fi-at-debug pre {
+    background-color: color-mix(in oklab, var(--color-white) 5%, transparent);
+    box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--color-white) 10%, transparent);
+}
+
+/* Responsive ----------------------------------------------------------- */
 
 @media (max-width: 640px) {
-    .fi-ta-change {
-        align-items: flex-start;
+    .fi-at-header {
         flex-direction: column;
-        gap: 0.125rem;
+        gap: 0.375rem;
+    }
+
+    .fi-at-changes-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .fi-at-change {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.25rem;
     }
 }

@@ -49,7 +49,7 @@ it('renders inside a Filament section so it follows the theme', function (): voi
     Livewire::test(ActivityTimelineWidget::class, ['record' => $order, 'source' => 'spatie'])
         ->assertOk()
         ->assertSeeHtml('fi-section')
-        ->assertSeeHtml('fi-ta');
+        ->assertSeeHtml('fi-at');
 });
 
 it('applies closures declared on a widget subclass', function (): void {

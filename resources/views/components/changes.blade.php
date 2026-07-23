@@ -1,9 +1,9 @@
-<div class="fi-ta-changes">
-    <p class="fi-ta-changes-count">
+<div class="fi-at-changes">
+    <p class="fi-at-changes-count">
         {{ trans_choice('filament-activity-timeline::timeline.changes.count', count($changes), ['count' => count($changes)]) }}
     </p>
 
-    <ul role="list" class="fi-ta-changes-list">
+    <ul role="list" class="fi-at-changes-list">
         @foreach ($changes as $change)
             @php
                 $accessible = $change->hasOld
@@ -11,16 +11,16 @@
                     : __('filament-activity-timeline::timeline.changes.set_to', ['new' => $change->new]);
             @endphp
 
-            <li class="fi-ta-change">
-                <span class="fi-ta-change-label">{{ $change->label }}</span>
+            <li class="fi-at-change">
+                <span class="fi-at-change-label">{{ $change->label }}</span>
 
-                <span class="fi-ta-change-values" aria-label="{{ $accessible }}">
+                <span class="fi-at-change-values" aria-label="{{ $accessible }}">
                     @if ($change->hasOld)
-                        <x-filament::badge color="gray" size="sm">{{ $change->old }}</x-filament::badge>
-                        <x-filament::icon icon="heroicon-m-arrow-right" class="fi-ta-arrow" aria-hidden="true" />
+                        <span class="fi-at-chip fi-at-chip--old">{{ $change->old }}</span>
+                        <x-filament::icon icon="heroicon-m-arrow-right" class="fi-at-arrow" aria-hidden="true" />
                     @endif
 
-                    <x-filament::badge color="primary" size="sm">{{ $change->new }}</x-filament::badge>
+                    <span class="fi-at-chip fi-at-chip--new">{{ $change->new }}</span>
                 </span>
             </li>
         @endforeach

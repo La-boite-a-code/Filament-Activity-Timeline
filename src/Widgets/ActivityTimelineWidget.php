@@ -177,6 +177,10 @@ class ActivityTimelineWidget extends Widget
     }
 
     /**
+     * Livewire shares every public property with the view after the explicit
+     * view data, so these keys must never collide with a public property name
+     * (a null $heading would silently erase the resolved heading).
+     *
      * @return array<string, mixed>
      */
     protected function getViewData(): array
@@ -188,16 +192,15 @@ class ActivityTimelineWidget extends Widget
 
         return [
             'timeline' => $timeline,
-            'heading' => $timeline->getHeading()
+            'sectionHeading' => $timeline->getHeading()
                 ?? (string) trans('filament-activity-timeline::timeline.heading'),
-            'description' => $timeline->getDescription(),
+            'sectionDescription' => $timeline->getDescription(),
             'renderedEntries' => $resolver->render($result->entries),
             'hasMore' => $result->hasMore && $timeline->hasLoadMore(),
             'showFilters' => $timeline->hasFilters(),
             'filterOptions' => $timeline->hasFilters() ? $this->filterOptions($timeline, $resolver) : [],
-            'activeEvent' => $this->activeEvent,
             'errored' => $this->errored,
-            'debug' => $timeline->hasDebug(),
+            'showDebug' => $timeline->hasDebug(),
         ];
     }
 
