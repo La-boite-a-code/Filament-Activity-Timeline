@@ -5,7 +5,9 @@ All notable changes to `filament-activity-timeline` will be documented in this f
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [1.0.0] - 2026-07-24
+
+First stable release.
 
 ### Fixed
 
@@ -39,4 +41,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Light and dark themes, responsive and accessible markup.
 - Support for Filament 4 and 5, Laravel 12 and 13, PHP 8.3 to 8.5.
 
+[1.0.0]: https://github.com/la-boite-a-code/filament-activity-timeline/compare/v0.1.0...v1.0.0
 [0.1.0]: https://github.com/la-boite-a-code/filament-activity-timeline/releases/tag/v0.1.0
