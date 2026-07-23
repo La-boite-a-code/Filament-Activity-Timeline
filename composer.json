@@ -1,0 +1,94 @@
+{
+    "name": "laboiteacode/filament-activity-timeline",
+    "description": "The semantic activity timeline for Filament. Turn technical activity logs into clear, localized business events.",
+    "keywords": [
+        "laboiteacode",
+        "laravel",
+        "filament",
+        "activity",
+        "timeline",
+        "activity-log",
+        "activitylog",
+        "history",
+        "audit",
+        "spatie"
+    ],
+    "homepage": "https://github.com/la-boite-a-code/filament-activity-timeline",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "La Boite A Code",
+            "email": "alexandre@laboiteacode.fr",
+            "role": "Developer"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/la-boite-a-code/filament-activity-timeline/issues",
+        "source": "https://github.com/la-boite-a-code/filament-activity-timeline"
+    },
+    "require": {
+        "php": "^8.3",
+        "filament/filament": "^4.0|^5.0",
+        "filament/schemas": "^4.0|^5.0",
+        "filament/support": "^4.0|^5.0",
+        "filament/widgets": "^4.0|^5.0",
+        "illuminate/contracts": "^12.0|^13.0",
+        "spatie/laravel-package-tools": "^1.92"
+    },
+    "require-dev": {
+        "larastan/larastan": "^3.0",
+        "laravel/pint": "^1.29",
+        "nunomaduro/collision": "^8.0",
+        "orchestra/testbench": "^10.0|^11.0",
+        "pestphp/pest": "^4.0",
+        "pestphp/pest-plugin-laravel": "^4.0",
+        "phpstan/extension-installer": "^1.4",
+        "phpstan/phpstan-deprecation-rules": "^2.0",
+        "phpstan/phpstan-phpunit": "^2.0",
+        "spatie/laravel-activitylog": "^5.0"
+    },
+    "suggest": {
+        "spatie/laravel-activitylog": "Required to use the built-in Spatie activity source (^5.0)."
+    },
+    "autoload": {
+        "psr-4": {
+            "LaBoiteACode\\FilamentActivityTimeline\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "LaBoiteACode\\FilamentActivityTimeline\\Tests\\": "tests/",
+            "Workbench\\App\\": "workbench/app/",
+            "Workbench\\Database\\Factories\\": "workbench/database/factories/",
+            "Workbench\\Database\\Seeders\\": "workbench/database/seeders/"
+        }
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true,
+            "phpstan/extension-installer": true
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "LaBoiteACode\\FilamentActivityTimeline\\FilamentActivityTimelineServiceProvider"
+            ]
+        }
+    },
+    "scripts": {
+        "post-autoload-dump": [
+            "@clear",
+            "@prepare"
+        ],
+        "clear": "@php vendor/bin/testbench package:purge-skeleton --ansi",
+        "prepare": "@php vendor/bin/testbench package:discover --ansi",
+        "test": "vendor/bin/pest",
+        "test:coverage": "vendor/bin/pest --coverage",
+        "analyse": "vendor/bin/phpstan analyse",
+        "format": "vendor/bin/pint"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

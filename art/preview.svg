@@ -1,0 +1,65 @@
+<svg width="960" height="500" viewBox="0 0 960 500" fill="none" xmlns="http://www.w3.org/2000/svg" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif">
+  <rect width="960" height="500" rx="16" fill="#0f172a"/>
+  <rect x="24" y="24" width="912" height="452" rx="14" fill="#1e293b" stroke="#334155" stroke-width="1"/>
+
+  <!-- Header -->
+  <circle cx="52" cy="58" r="12" fill="#1d4ed8" fill-opacity="0.15"/>
+  <path d="M52 51v7l4 2" stroke="#93c5fd" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="74" y="55" fill="#f8fafc" font-size="16" font-weight="600">Activity</text>
+  <text x="74" y="72" fill="#94a3b8" font-size="12">Latest actions performed on this order</text>
+
+  <!-- Tabs -->
+  <rect x="40" y="92" width="86" height="26" rx="13" fill="#1d4ed8" fill-opacity="0.18"/>
+  <text x="83" y="109" fill="#93c5fd" font-size="12" font-weight="600" text-anchor="middle">All events</text>
+  <text x="150" y="109" fill="#94a3b8" font-size="12" text-anchor="middle">Created</text>
+  <text x="220" y="109" fill="#94a3b8" font-size="12" text-anchor="middle">Updated</text>
+  <text x="288" y="109" fill="#94a3b8" font-size="12" text-anchor="middle">Deleted</text>
+
+  <!-- vertical line -->
+  <line x1="56" y1="152" x2="56" y2="404" stroke="#334155" stroke-width="2"/>
+
+  <!-- Entry 1: paid -->
+  <circle cx="56" cy="152" r="15" fill="#0f172a" stroke="#22c55e" stroke-width="1.5"/>
+  <path d="M50 152l4 4 8-8" stroke="#22c55e" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="86" y="149" fill="#e2e8f0" font-size="14"><tspan font-weight="600">Alexandre</tspan> marked order <tspan font-weight="600">CMD-2026-0184</tspan> as paid.</text>
+  <text x="86" y="168" fill="#94a3b8" font-size="11.5">Alexandre Ribes &#183; 2 minutes ago</text>
+  <rect x="300" y="158" width="52" height="18" rx="9" fill="#22c55e" fill-opacity="0.14"/>
+  <text x="326" y="171" fill="#4ade80" font-size="10.5" font-weight="600" text-anchor="middle">Updated</text>
+
+  <!-- change chips for entry 1 -->
+  <rect x="86" y="182" width="640" height="34" rx="8" fill="#0f172a" stroke="#334155" stroke-width="1"/>
+  <text x="100" y="203" fill="#94a3b8" font-size="12" font-weight="600">Status</text>
+  <rect x="152" y="190" width="76" height="18" rx="9" fill="#334155"/>
+  <text x="190" y="203" fill="#cbd5e1" font-size="10.5" text-anchor="middle">Pending</text>
+  <text x="236" y="203" fill="#64748b" font-size="12">&#8594;</text>
+  <rect x="252" y="190" width="58" height="18" rx="9" fill="#1d4ed8" fill-opacity="0.25"/>
+  <text x="281" y="203" fill="#93c5fd" font-size="10.5" text-anchor="middle">Paid</text>
+
+  <text x="360" y="203" fill="#94a3b8" font-size="12" font-weight="600">Customer</text>
+  <rect x="430" y="190" width="98" height="18" rx="9" fill="#334155"/>
+  <text x="479" y="203" fill="#cbd5e1" font-size="10.5" text-anchor="middle">ACME France</text>
+  <text x="536" y="203" fill="#64748b" font-size="12">&#8594;</text>
+  <rect x="552" y="190" width="110" height="18" rx="9" fill="#1d4ed8" fill-opacity="0.25"/>
+  <text x="607" y="203" fill="#93c5fd" font-size="10.5" text-anchor="middle">Dupont Conseil</text>
+
+  <!-- Entry 2: created -->
+  <circle cx="56" cy="266" r="15" fill="#0f172a" stroke="#3b82f6" stroke-width="1.5"/>
+  <path d="M56 260v12M50 266h12" stroke="#3b82f6" stroke-width="1.8" stroke-linecap="round"/>
+  <text x="86" y="263" fill="#e2e8f0" font-size="14"><tspan font-weight="600">Alexandre</tspan> created order <tspan font-weight="600">CMD-2026-0184</tspan>.</text>
+  <text x="86" y="282" fill="#94a3b8" font-size="11.5">Alexandre Ribes &#183; 10 minutes ago</text>
+  <rect x="300" y="272" width="52" height="18" rx="9" fill="#3b82f6" fill-opacity="0.14"/>
+  <text x="326" y="285" fill="#93c5fd" font-size="10.5" font-weight="600" text-anchor="middle">Created</text>
+
+  <!-- Before / after callout -->
+  <rect x="86" y="316" width="800" height="132" rx="12" fill="#0b1220" stroke="#334155" stroke-width="1"/>
+  <text x="106" y="342" fill="#64748b" font-size="11" font-weight="700" letter-spacing="1">BEFORE</text>
+  <text x="106" y="366" fill="#f87171" font-size="13" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">customer_id: 14 &#8594; 27</text>
+  <text x="106" y="388" fill="#f87171" font-size="13" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">status: pending &#8594; paid</text>
+
+  <line x1="470" y1="332" x2="470" y2="432" stroke="#334155" stroke-width="1"/>
+
+  <text x="494" y="342" fill="#64748b" font-size="11" font-weight="700" letter-spacing="1">AFTER</text>
+  <text x="494" y="366" fill="#86efac" font-size="13">Customer: ACME France &#8594; Dupont Conseil</text>
+  <text x="494" y="388" fill="#86efac" font-size="13">Alexandre marked order CMD-2026-0184 as paid.</text>
+  <text x="494" y="416" fill="#94a3b8" font-size="11.5">Localized, business ready, no raw identifiers.</text>
+</svg>

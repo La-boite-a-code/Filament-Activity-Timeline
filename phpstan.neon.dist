@@ -1,0 +1,15 @@
+parameters:
+    level: 6
+    paths:
+        - src
+        - config
+    tmpDir: build/phpstan
+    checkModelProperties: true
+    ignoreErrors:
+        # Spatie activity scopes are added dynamically on the configured model.
+        - '#Call to an undefined method .*::forSubject\(\)#'
+        # The widget view uses the package view namespace, which is registered
+        # at runtime and therefore not visible to static analysis.
+        -
+            message: '#Property .*ActivityTimelineWidget::\$view \(view-string\) does not accept default value of type string#'
+            path: src/Widgets/ActivityTimelineWidget.php
