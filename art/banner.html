@@ -1,0 +1,437 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Filament Activity Timeline - banner</title>
+<style>
+  @font-face { font-family: "Satoshi"; src: local("Satoshi-Light");  font-weight: 300; font-style: normal; }
+  @font-face { font-family: "Satoshi"; src: local("Satoshi-Regular"); font-weight: 400; font-style: normal; }
+  @font-face { font-family: "Satoshi"; src: local("Satoshi-Medium"); font-weight: 500; font-style: normal; }
+  @font-face { font-family: "Satoshi"; src: local("Satoshi-Bold");   font-weight: 700; font-style: normal; }
+  @font-face { font-family: "Satoshi"; src: local("Satoshi-Black");  font-weight: 900; font-style: normal; }
+
+  :root{
+    --paper:#FAF8F4;
+    --ink:#17150F;
+    --ink-2:#514B41;
+    --muted:#8A8172;
+    --line:#E6E0D4;
+    --amber:#F59E0B;
+    --amber-deep:#B45309;
+    --mark:#FDE68A;
+
+    /* Filament / product UI tokens (light) */
+    --ui-line:#E5E7EB;
+    --ui-line-2:#F3F4F6;
+    --ui-text:#111827;
+    --ui-muted:#6B7280;
+    --ui-muted-2:#9CA3AF;
+    --ui-surface:#F9FAFB;
+  }
+
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  html,body{ width:1280px; height:720px; overflow:hidden; }
+  body{
+    position:relative;
+    background:var(--paper);
+    font-family:"Satoshi", -apple-system, BlinkMacSystemFont, sans-serif;
+    color:var(--ink);
+    -webkit-font-smoothing:antialiased;
+    text-rendering:geometricPrecision;
+  }
+
+  /* ---------- atmosphere ---------- */
+  .dotgrid{
+    position:absolute; inset:0;
+    background-image:radial-gradient(circle at 1px 1px, rgba(23,21,15,.13) 1px, transparent 0);
+    background-size:22px 22px;
+    -webkit-mask-image:linear-gradient(115deg, rgba(0,0,0,.55) 0%, rgba(0,0,0,.16) 46%, transparent 72%);
+            mask-image:linear-gradient(115deg, rgba(0,0,0,.55) 0%, rgba(0,0,0,.16) 46%, transparent 72%);
+  }
+  .glow-a{
+    position:absolute; width:900px; height:900px; right:-230px; top:-380px;
+    background:radial-gradient(circle, rgba(245,158,11,.20) 0%, rgba(245,158,11,.07) 42%, transparent 66%);
+  }
+  .glow-b{
+    position:absolute; width:760px; height:760px; left:-300px; bottom:-380px;
+    background:radial-gradient(circle, rgba(180,83,9,.09) 0%, transparent 64%);
+  }
+  .wash{
+    position:absolute; inset:0;
+    background:linear-gradient(100deg, transparent 46%, rgba(228,219,202,.34) 100%);
+  }
+
+  .stage{ position:relative; width:1280px; height:720px; }
+
+  /* ---------- left column ---------- */
+  .copy{
+    position:absolute; left:74px; top:0; bottom:0; width:502px;
+    display:flex; flex-direction:column; justify-content:center;
+    z-index:3;
+  }
+  .eyebrow{
+    display:flex; align-items:center; gap:10px;
+    font-size:12.5px; font-weight:700; letter-spacing:.15em; text-transform:uppercase;
+    color:var(--amber-deep);
+    margin-bottom:22px;
+  }
+  .eyebrow .dot{
+    width:7px; height:7px; border-radius:50%; background:var(--amber);
+    box-shadow:0 0 0 4px rgba(245,158,11,.16);
+  }
+  .eyebrow .sep{ color:#D9CDB6; font-weight:500; letter-spacing:0; }
+
+  h1{
+    font-weight:900; font-size:82px; line-height:.92; letter-spacing:-.035em;
+    color:var(--ink);
+  }
+  h1 .l2{ display:block; }
+
+  .sub{
+    margin-top:24px;
+    font-size:20.5px; line-height:1.5; font-weight:500; color:var(--ink-2);
+    max-width:470px; letter-spacing:-.006em;
+  }
+  .sub mark{
+    background:var(--mark); color:#3A2A05; border-radius:3px;
+    padding:.06em .22em; margin-inline:-.06em;
+    box-decoration-break:clone; -webkit-box-decoration-break:clone;
+  }
+
+  .pills{ display:flex; gap:9px; margin-top:32px; flex-wrap:wrap; }
+  .pill{
+    display:inline-flex; align-items:center; gap:7px;
+    padding:8px 13px 8px 11px;
+    background:rgba(255,255,255,.85);
+    border:1px solid var(--line);
+    border-radius:999px;
+    font-size:13px; font-weight:600; color:var(--ink-2); letter-spacing:-.005em;
+    box-shadow:0 1px 2px rgba(23,21,15,.03);
+  }
+  .pill svg{ width:14px; height:14px; stroke:var(--amber-deep); fill:none; stroke-width:2; }
+
+  .cmd{
+    margin-top:34px;
+    display:inline-flex; align-items:center; gap:11px;
+    align-self:flex-start;
+    padding:12px 17px;
+    background:#FFFFFF;
+    border:1px solid var(--line);
+    border-radius:11px;
+    box-shadow:0 1px 2px rgba(23,21,15,.04), 0 8px 18px -12px rgba(23,21,15,.18);
+    font-family:ui-monospace,"SF Mono",Menlo,monospace;
+    font-size:12px; color:#332E24; letter-spacing:-.01em; white-space:nowrap;
+  }
+  .cmd .prompt{ color:var(--amber); font-weight:700; }
+  .cmd .dim{ color:var(--muted); }
+
+  /* ---------- right: UI mock ---------- */
+  .mock{ position:absolute; inset:0; z-index:2; }
+
+  .card{
+    position:absolute;
+    background:#fff;
+    border:1px solid var(--ui-line);
+    border-radius:14px;
+    overflow:hidden;
+  }
+
+  /* back card - the semantic registry */
+  .reg-card{
+    left:716px; top:40px; width:500px; height:240px;
+    box-shadow:0 1px 2px rgba(23,21,15,.04), 0 16px 34px -20px rgba(23,21,15,.20);
+  }
+  .reg-head{ padding:15px 20px 11px; border-bottom:1px solid var(--ui-line-2); }
+  .reg-title{ font-size:14.5px; font-weight:700; color:var(--ui-text); letter-spacing:-.012em; }
+  .reg-sub{ margin-top:3px; font-size:11.5px; color:var(--ui-muted); }
+  .reg-code{
+    padding:14px 20px;
+    font-family:ui-monospace,"SF Mono",Menlo,monospace;
+    font-size:12px; line-height:1.75; letter-spacing:-.01em;
+    color:#374151; white-space:pre;
+  }
+  .reg-code .k{ color:#B45309; }
+  .reg-code .s{ color:#15803D; }
+  .reg-code .m{ color:#1D4ED8; }
+  .reg-code .c{ color:#9CA3AF; }
+
+  /* front card - the timeline */
+  .tl-card{
+    left:606px; top:206px; width:648px; height:620px;
+    border-radius:16px;
+    box-shadow:
+      0 2px 4px rgba(23,21,15,.05),
+      0 30px 56px -22px rgba(23,21,15,.26),
+      -26px 44px 92px -46px rgba(23,21,15,.38);
+  }
+  .tl-head{
+    display:flex; align-items:center; gap:9px;
+    padding:16px 20px 14px;
+    border-bottom:1px solid var(--ui-line-2);
+  }
+  .tl-head svg{ width:19px; height:19px; stroke:var(--ui-muted); fill:none; stroke-width:1.6; }
+  .tl-title{ font-size:15.5px; font-weight:700; color:var(--ui-text); letter-spacing:-.014em; }
+
+  .tabs{
+    margin:14px 20px 0;
+    display:flex; align-items:center; gap:3px;
+    border:1px solid var(--ui-line); border-radius:10px;
+    padding:4px;
+  }
+  .tab{
+    padding:6px 12px; border-radius:7px;
+    font-size:12px; font-weight:600; color:var(--ui-muted); letter-spacing:-.008em;
+  }
+  .tab.on{
+    background:#fff; color:var(--ui-text);
+    box-shadow:0 1px 2px rgba(0,0,0,.06), 0 0 0 1px rgba(17,24,39,.07);
+  }
+
+  .entries{ padding:16px 20px 0; }
+  .entry{ position:relative; display:grid; grid-template-columns:30px 1fr; column-gap:12px; padding-bottom:18px; }
+  .entry .rail{
+    position:absolute; left:15px; top:34px; bottom:-2px; width:1px;
+    background:var(--ui-line);
+  }
+  .entry:last-child .rail{ display:none; }
+
+  .e-dot{
+    position:relative; z-index:1;
+    width:30px; height:30px; border-radius:50%;
+    display:inline-flex; align-items:center; justify-content:center;
+  }
+  .e-dot svg{ width:14px; height:14px; fill:none; stroke-width:2; }
+  .e-dot.amber{ background:#FEF3C7; } .e-dot.amber svg{ stroke:#D97706; }
+  .e-dot.green{ background:#DCFCE7; } .e-dot.green svg{ stroke:#16A34A; }
+  .e-dot.blue{  background:#DBEAFE; } .e-dot.blue  svg{ stroke:#2563EB; }
+
+  .e-top{ display:flex; align-items:flex-start; justify-content:space-between; gap:12px; padding-top:4px; }
+  .e-sentence{ font-size:13.5px; font-weight:600; color:var(--ui-text); letter-spacing:-.011em; }
+  .badge{
+    flex-shrink:0; margin-top:1px;
+    display:inline-flex; align-items:center;
+    padding:2px 8px; border-radius:6px;
+    font-size:10.5px; font-weight:600; letter-spacing:-.005em;
+  }
+  .badge.amber{ background:#FFFBEB; color:#B45309; box-shadow:inset 0 0 0 1px rgba(217,119,6,.18); }
+  .badge.green{ background:#F0FDF4; color:#15803D; box-shadow:inset 0 0 0 1px rgba(22,163,74,.18); }
+  .badge.blue{  background:#EFF6FF; color:#1D4ED8; box-shadow:inset 0 0 0 1px rgba(37,99,235,.18); }
+
+  .e-meta{
+    display:flex; align-items:center; gap:6px;
+    margin-top:3px; font-size:11px; color:var(--ui-muted);
+  }
+  .e-meta b{ font-weight:600; color:var(--ui-muted); }
+  .e-meta .mdot{ width:2.5px; height:2.5px; border-radius:50%; background:currentColor; opacity:.5; }
+
+  .changes{
+    margin-top:8px; padding:8px 11px;
+    border-radius:9px;
+    box-shadow:inset 0 0 0 1px rgba(17,24,39,.07);
+  }
+  .ch-count{
+    font-size:9px; font-weight:600; letter-spacing:.06em; text-transform:uppercase;
+    color:var(--ui-muted); margin-bottom:6px;
+  }
+  .ch-rows{ display:grid; grid-template-columns:max-content 1fr; gap:5px 14px; }
+  .ch-label{ font-size:11px; font-weight:600; color:var(--ui-muted); align-self:baseline; }
+  .ch-vals{ display:flex; align-items:center; gap:5px; flex-wrap:wrap; }
+  .chip{
+    display:inline-flex; align-items:center;
+    padding:1px 7px; border-radius:6px;
+    font-size:10.5px; line-height:16px;
+    font-variant-numeric:tabular-nums;
+  }
+  .chip.old{
+    background:var(--ui-surface); color:var(--ui-muted);
+    box-shadow:inset 0 0 0 1px rgba(75,85,99,.14);
+    text-decoration:line-through;
+    text-decoration-color:rgba(107,114,128,.5);
+  }
+  .chip.new{
+    background:#fff; color:var(--ui-text); font-weight:600;
+    box-shadow:inset 0 0 0 1px rgba(17,24,39,.13);
+  }
+  .ch-arrow{ width:11px; height:11px; stroke:#9CA3AF; fill:none; stroke-width:2; flex-shrink:0; }
+
+  /* floating zoom - one change, magnified */
+  .zoom{
+    position:absolute; left:996px; top:348px; width:230px; z-index:4;
+    background:#fff; border:1px solid var(--ui-line); border-radius:12px;
+    box-shadow:0 2px 4px rgba(23,21,15,.06), 0 22px 44px -18px rgba(23,21,15,.30);
+    padding:12px 14px;
+  }
+  .zoom .ch-count{ margin-bottom:7px; }
+  .zoom .z-label{ font-size:12.5px; font-weight:700; color:var(--ui-text); letter-spacing:-.012em; margin-bottom:7px; }
+  .zoom .z-vals{ display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
+  .zoom .chip{ font-size:12px; line-height:20px; padding:2px 9px; }
+  .zoom .ch-arrow{ width:13px; height:13px; }
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="wash"></div>
+  <div class="dotgrid"></div>
+  <div class="glow-a"></div>
+  <div class="glow-b"></div>
+
+  <!-- ============ UI MOCK ============ -->
+  <div class="mock">
+
+    <!-- semantic registry -->
+    <div class="card reg-card">
+      <div class="reg-head">
+        <div class="reg-title">Semantic registry</div>
+        <div class="reg-sub">Declare once how a model tells its story</div>
+      </div>
+      <div class="reg-code"><span class="c">// Declared once, rendered everywhere</span>
+ActivityTimeline::<span class="m">forModel</span>(Order::class)
+    -&gt;<span class="m">eventSentence</span>(<span class="s">'payment.refunded'</span>,
+        <span class="s">':causer refunded :subject.'</span>);</div>
+    </div>
+
+    <!-- timeline -->
+    <div class="card tl-card">
+      <div class="tl-head">
+        <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg>
+        <span class="tl-title">Activity</span>
+      </div>
+
+      <div class="tabs">
+        <span class="tab on">All events</span>
+        <span class="tab">Created</span>
+        <span class="tab">Updated</span>
+        <span class="tab">Deleted</span>
+        <span class="tab">Restored</span>
+      </div>
+
+      <div class="entries">
+
+        <!-- updated -->
+        <div class="entry">
+          <span class="rail"></span>
+          <span class="e-dot amber">
+            <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10"/></svg>
+          </span>
+          <div>
+            <div class="e-top">
+              <span class="e-sentence">Mia Weber updated order #4821.</span>
+              <span class="badge amber">Updated</span>
+            </div>
+            <div class="e-meta"><b>Mia Weber</b><span class="mdot"></span>12 minutes ago</div>
+            <div class="changes">
+              <div class="ch-count">2 changes</div>
+              <div class="ch-rows">
+                <span class="ch-label">Status</span>
+                <span class="ch-vals">
+                  <span class="chip old">Pending</span>
+                  <svg class="ch-arrow" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"/></svg>
+                  <span class="chip new">Shipped</span>
+                </span>
+                <span class="ch-label">Total</span>
+                <span class="ch-vals">
+                  <span class="chip old">$89.90</span>
+                  <svg class="ch-arrow" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"/></svg>
+                  <span class="chip new">$74.90</span>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- custom event -->
+        <div class="entry">
+          <span class="rail"></span>
+          <span class="e-dot blue">
+            <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3"/></svg>
+          </span>
+          <div>
+            <div class="e-top">
+              <span class="e-sentence">Stripe refunded order #4821.</span>
+              <span class="badge blue">Refunded</span>
+            </div>
+            <div class="e-meta"><b>Stripe webhook</b><span class="mdot"></span>2 hours ago</div>
+          </div>
+        </div>
+
+        <!-- created -->
+        <div class="entry">
+          <span class="rail"></span>
+          <span class="e-dot green">
+            <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+          </span>
+          <div>
+            <div class="e-top">
+              <span class="e-sentence">Sofia Rossi created order #4821.</span>
+              <span class="badge green">Created</span>
+            </div>
+            <div class="e-meta"><b>Sofia Rossi</b><span class="mdot"></span>2 weeks ago</div>
+            <div class="changes">
+              <div class="ch-count">3 changes</div>
+              <div class="ch-rows">
+                <span class="ch-label">Customer</span>
+                <span class="ch-vals"><span class="chip new">Oscar Auer</span></span>
+                <span class="ch-label">Status</span>
+                <span class="ch-vals"><span class="chip new">Pending</span></span>
+                <span class="ch-label">Total</span>
+                <span class="ch-vals"><span class="chip new">$89.90</span></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- floating zoomed change -->
+    <div class="zoom">
+      <div class="ch-count">Old &#8594; new</div>
+      <div class="z-label">Total</div>
+      <div class="z-vals">
+        <span class="chip old">$89.90</span>
+        <svg class="ch-arrow" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"/></svg>
+        <span class="chip new">$74.90</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ COPY ============ -->
+  <div class="copy">
+    <div class="eyebrow">
+      <span class="dot"></span>
+      <span>Filament plugin</span>
+      <span class="sep">/</span>
+      <span>v4 &amp; v5</span>
+    </div>
+
+    <h1>Activity<span class="l2">Timeline</span></h1>
+
+    <p class="sub">
+      Your <mark>spatie/activitylog</mark> records as clear, localized
+      business sentences, with event filters and old&#8202;&#8594;&#8202;new
+      changes at a glance.
+    </p>
+
+    <div class="pills">
+      <span class="pill">
+        <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.087.16 2.185.283 3.293.369V21l4.076-4.076a1.526 1.526 0 0 1 1.037-.443 48.282 48.282 0 0 0 5.68-.494c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z"/></svg>
+        Business sentences per event
+      </span>
+      <span class="pill">
+        <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3c2.755 0 5.455.232 8.083.678.533.09.917.556.917 1.096v1.044a2.25 2.25 0 0 1-.659 1.591l-5.432 5.432a2.25 2.25 0 0 0-.659 1.591v2.927a2.25 2.25 0 0 1-1.244 2.013L9.75 21v-6.568a2.25 2.25 0 0 0-.659-1.591L3.659 7.409A2.25 2.25 0 0 1 3 5.818V4.774c0-.54.384-1.006.917-1.096A48.32 48.32 0 0 1 12 3Z"/></svg>
+        Filters &amp; load more
+      </span>
+      <span class="pill">
+        <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="m21 7.5-9-5.25L3 7.5m18 0-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9"/></svg>
+        Money, enums &amp; relations
+      </span>
+    </div>
+
+    <div class="cmd">
+      <span class="prompt">$</span>
+      <span><span class="dim">composer require</span> laboiteacode/filament-activity-timeline</span>
+    </div>
+  </div>
+</div>
+</body>
+</html>
