@@ -103,12 +103,22 @@ The package supports two Filament major versions at once. To stay compatible:
 - Generic UI (card, tabs, badges, avatars, buttons, empty state, callout) uses
   native Filament Blade components, so it inherits Filament's palette, default
   colors and dark mode in both majors.
-- Only the timeline specific scaffolding (the vertical line, the event dots and
-  the change layout) ships as a small, build free stylesheet that hooks into
-  Filament's own CSS custom properties.
+- Only the timeline specific scaffolding (the rail, the event dots, the change
+  chips) ships as a small, build free stylesheet under the package's own
+  `fi-at-*` class namespace (`fi-ta-*` belongs to Filament's tables and must
+  not be reused). Every color recombines a Filament core recipe, variable for
+  variable: dots follow the modal icon tinted circle recipe scoped by the core
+  `.fi-color-{name}` custom properties, chips follow the badge gray recipe, and
+  rails and panels use the section hairline pair. Filament v4 exposes complete
+  CSS colors (oklch), so tints are derived with `color-mix()` and the
+  stylesheet contains zero color literals.
 - The Livewire component sticks to the stable API shared by Livewire 3 and 4
   (public properties, `mount`, action methods, `wire:click`), avoiding anything
-  that differs between the two.
+  that differs between the two. Two Blade and Livewire constraints are enforced
+  by tests: directives such as `@js()` are never compiled inside component tag
+  attributes (values are inlined with echoes instead), and view data keys never
+  collide with public property names, because Livewire shares public properties
+  with the view after the explicit view data.
 
 ## Testing note
 
