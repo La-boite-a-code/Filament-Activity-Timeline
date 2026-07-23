@@ -45,10 +45,10 @@
         "phpstan/extension-installer": "^1.4",
         "phpstan/phpstan-deprecation-rules": "^2.0",
         "phpstan/phpstan-phpunit": "^2.0",
-        "spatie/laravel-activitylog": "^5.0"
+        "spatie/laravel-activitylog": "^4.12|^5.0"
     },
     "suggest": {
-        "spatie/laravel-activitylog": "Required to use the built-in Spatie activity source (^5.0)."
+        "spatie/laravel-activitylog": "Required to use the built-in Spatie activity source (^4.12|^5.0)."
     },
     "autoload": {
         "psr-4": {

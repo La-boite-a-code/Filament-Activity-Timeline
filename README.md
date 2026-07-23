@@ -94,7 +94,7 @@ Alexandre updated order CMD-2026-0184
 - PHP 8.3, 8.4 or 8.5
 - Laravel 12 or 13
 - Filament 4 or 5
-- `spatie/laravel-activitylog` 5 (only when using the Spatie source)
+- `spatie/laravel-activitylog` 4.12 or 5 (only when using the Spatie source)
 
 ## Installation
 

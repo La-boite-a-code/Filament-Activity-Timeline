@@ -16,6 +16,7 @@ use Filament\Schemas\SchemasServiceProvider;
 use Filament\Support\SupportServiceProvider;
 use Filament\Tables\TablesServiceProvider;
 use Filament\Widgets\WidgetsServiceProvider;
+use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\View;
@@ -91,8 +92,7 @@ abstract class TestCase extends Orchestra
 
     protected function setUpDatabase(): void
     {
-        $migration = include __DIR__.'/../vendor/spatie/laravel-activitylog/database/migrations/create_activity_log_table.php.stub';
-        $migration->up();
+        $this->migrateActivityLogTable();
 
         Schema::create('users', function (Blueprint $table): void {
             $table->id();
@@ -118,5 +118,34 @@ abstract class TestCase extends Orchestra
             $table->string('internal_token')->nullable();
             $table->timestamps();
         });
+    }
+
+    protected function migrateActivityLogTable(): void
+    {
+        // activitylog v5 ships a single anonymous-class migration, while v4
+        // splits the event and batch_uuid columns into named-class stubs. A
+        // named class can only be declared once per process, so it is
+        // instantiated directly when a previous test already included it.
+        $stubs = [
+            'create_activity_log_table.php.stub' => 'CreateActivityLogTable',
+            'add_event_column_to_activity_log_table.php.stub' => 'AddEventColumnToActivityLogTable',
+            'add_batch_uuid_column_to_activity_log_table.php.stub' => 'AddBatchUuidColumnToActivityLogTable',
+        ];
+
+        foreach ($stubs as $stub => $legacyClass) {
+            $path = __DIR__.'/../vendor/spatie/laravel-activitylog/database/migrations/'.$stub;
+
+            if (! file_exists($path)) {
+                continue;
+            }
+
+            $migration = class_exists($legacyClass) ? new $legacyClass : include $path;
+
+            if (! $migration instanceof Migration) {
+                $migration = new $legacyClass;
+            }
+
+            $migration->up();
+        }
     }
 }
