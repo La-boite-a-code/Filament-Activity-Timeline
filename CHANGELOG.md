@@ -5,6 +5,23 @@ All notable changes to `filament-activity-timeline` will be documented in this f
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.2] - 2026-09-20
+
+### Security
+
+- Every public property of `ActivityTimelineWidget` is now `#[Locked]`. Livewire lets a browser write to any public property that is not locked, and none of this state is a user input: a crafted request could change the source, raise the page size, turn the presentation diagnostics on, or replace `presentationOverrides`. Replacing the overrides was the one with real reach, because it dropped the `hiddenAttributes` the widget was mounted with and revealed those attributes in the change lists. Attributes listed in the `hidden_attributes` configuration were never affected, and the record itself was never swappable (Livewire keeps the model identity in the checksummed snapshot), so the timeline always stayed scoped to the mounted record.
+- The visible window is now bounded by `pagination.max_per_page` (500 by default). `loadMore()` grew the page size by one step per call with no ceiling, and the page size was writable from the browser, so a single request could ask the source for an unbounded number of rows with their `causer` and `subject` relations. A `per_page` configured above the ceiling is still honoured in full.
+- `filterByEvent()` now only accepts an event the timeline actually offers as a filter tab, and falls back to the unfiltered timeline otherwise. The event was previously passed straight to the source. It was bound as a query parameter, so no injection was possible, and filtering only ever narrows an already visible result set, but the widget no longer queries an event it was not configured to expose.
+
+### Fixed
+
+- An authorization failure raised while reading activity is no longer swallowed. `readActivity()` caught every `Throwable` and rendered the generic error state, so a denied timeline looked like a record with no history and a `403` never reached the handler. `AuthorizationException`, `AuthenticationException`, `ValidationException`, `HttpResponseException` and any `HttpExceptionInterface` now propagate. Every other failure still degrades to the error state, and is still reported.
+- `mount()` now clamps the configured page size to at least 1, so a `per_page` of `0` or a negative value no longer reaches the source.
+
+### Added
+
+- `pagination.max_per_page` configuration key. Published configuration files keep working without it: the ceiling falls back to 500.
+
 ## [1.0.1] - 2026-07-24
 
 ### Fixed
@@ -47,6 +64,7 @@ First stable release.
 - Light and dark themes, responsive and accessible markup.
 - Support for Filament 4 and 5, Laravel 12 and 13, PHP 8.3 to 8.5.
 
+[1.0.2]: https://github.com/la-boite-a-code/filament-activity-timeline/compare/v1.0.1...v1.0.2
 [1.0.1]: https://github.com/la-boite-a-code/filament-activity-timeline/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/la-boite-a-code/filament-activity-timeline/compare/v0.1.0...v1.0.0
 [0.1.0]: https://github.com/la-boite-a-code/filament-activity-timeline/releases/tag/v0.1.0

@@ -30,10 +30,15 @@ return [
     | (a single page is displayed). Cursor pagination is used when the source
     | supports it to keep large histories out of memory.
     |
+    | "max_per_page" is the ceiling the visible window may grow to through the
+    | load more button, so a long history can never be pulled in a single
+    | query. A "per_page" larger than the ceiling is always honoured in full.
+    |
     */
 
     'pagination' => [
         'per_page' => 20,
+        'max_per_page' => 500,
         'mode' => 'load_more',
     ],
 

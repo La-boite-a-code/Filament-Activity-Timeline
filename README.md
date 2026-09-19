@@ -292,6 +292,12 @@ Every property accepted by the drop-in `@livewire()` call, all serializable:
 | `presentationOverrides` | `array` | Serializable presentation overrides: `modelLabel`, `pluralModelLabel`, `attributeLabels`, `hiddenAttributes`, `eventSentences`. |
 | `debug` | `bool` | Presentation diagnostics (never in production). |
 
+These properties are server side configuration, not user input. Every one of
+them is `#[Locked]`, so a crafted Livewire request cannot change the record, the
+source, the page size or the presentation overrides of a rendered timeline. The
+browser only moves the timeline through the `loadMore()` and `filterByEvent()`
+actions, which validate what they are given.
+
 ## Using the semantic registry
 
 Declare a model presentation once, usually in a service provider. Every timeline
@@ -506,7 +512,9 @@ Timeline::make()->filters(['created', 'updated']); // tabs for these events only
 Without an explicit list, the tabs are built from the events declared in the
 configuration plus every event registered through `ActivityTimeline::event()`.
 Filtering happens in the source query, not in the browser, so it stays exact on
-large histories.
+large histories. Only an event the timeline actually offers as a tab is
+accepted: anything else falls back to the unfiltered timeline instead of
+reaching the source.
 
 ## Pagination
 
@@ -515,6 +523,11 @@ Set the page size with `->limit()` and enable progressive loading with
 when there is nothing left, keeps the already loaded items and never duplicates
 an entry. Cursor pagination is used whenever the source supports it, so large
 histories never load entirely into memory.
+
+The visible window grows one step at a time up to `pagination.max_per_page`
+(500 by default), so no sequence of clicks can turn a long history into a single
+unbounded query. A `per_page` larger than that ceiling is always honoured in
+full, so raising the page size never truncates a timeline.
 
 ## Theming
 
@@ -557,7 +570,8 @@ published configuration stays free of hard coded strings.
 Publish `config/filament-activity-timeline.php` to change the defaults:
 
 - `default_source`: the source used when a timeline does not pick one.
-- `pagination.per_page` and `pagination.mode` (`load_more` or `simple`).
+- `pagination.per_page`, `pagination.max_per_page` and `pagination.mode`
+  (`load_more` or `simple`).
 - `date_format` and `timezone` for the absolute date shown on hover.
 - `system_causer`: the identity shown when an activity has no causer.
 - `events`: the icon and color for each known event.
