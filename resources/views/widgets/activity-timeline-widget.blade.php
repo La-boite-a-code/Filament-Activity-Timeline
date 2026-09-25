@@ -1,4 +1,4 @@
-<div class="fi-at">
+<x-filament-widgets::widget class="fi-at">
     <x-filament::section
         :heading="$sectionHeading"
         :description="filled($sectionDescription) ? $sectionDescription : null"
@@ -34,4 +34,4 @@
             @endif
         @endif
     </x-filament::section>
-</div>
+</x-filament-widgets::widget>
