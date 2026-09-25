@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use LaBoiteACode\FilamentActivityTimeline\Data\TimelineEntry;
 use LaBoiteACode\FilamentActivityTimeline\Exceptions\MissingDependency;
@@ -37,6 +38,68 @@ it('normalizes a Spatie activity into a timeline entry', function (): void {
         ->and($entry->subject?->getKey())->toBe($order->getKey())
         ->and($entry->subjectType)->toBe(Order::class)
         ->and($entry->properties)->toBe(['old' => ['status' => 'pending'], 'attributes' => ['status' => 'paid']]);
+});
+
+it('reads the changes activitylog logged, wherever the installed version stores them', function (): void {
+    $order = Order::create(['number' => 'CMD-1']);
+
+    logChanges($order, ['old' => ['status' => 'pending'], 'attributes' => ['status' => 'paid']]);
+
+    $changes = spatie($order)->paginate(10)->entries[0]->changes();
+
+    expect($changes->count())->toBe(1)
+        ->and($changes->oldValue('status'))->toBe('pending')
+        ->and($changes->newValue('status'))->toBe('paid');
+});
+
+it('keeps the custom properties next to the changes activitylog v5 stores apart', function (): void {
+    $order = Order::create(['number' => 'CMD-1']);
+
+    makeActivity(
+        event: 'updated',
+        properties: ['recipient_email' => 'client@example.com'],
+        subject: $order,
+        attributeChanges: ['old' => ['status' => 'pending'], 'attributes' => ['status' => 'paid']],
+    );
+
+    $entry = spatie($order)->paginate(10)->entries[0];
+
+    expect($entry->properties)->toBe([
+        'recipient_email' => 'client@example.com',
+        'old' => ['status' => 'pending'],
+        'attributes' => ['status' => 'paid'],
+    ])->and($entry->changes()->count())->toBe(1);
+})->skip(! activitylogStoresChangesApart(), 'activitylog v4 keeps the changes inside the properties.');
+
+it('falls back to the changes kept in the properties when activitylog v5 recorded none apart', function (): void {
+    $order = Order::create(['number' => 'CMD-1']);
+
+    makeActivity(
+        event: 'updated',
+        properties: ['old' => ['status' => 'pending'], 'attributes' => ['status' => 'paid']],
+        subject: $order,
+        attributeChanges: [],
+    );
+
+    expect(spatie($order)->paginate(10)->entries[0]->changes()->count())->toBe(1);
+})->skip(! activitylogStoresChangesApart(), 'activitylog v4 has no attribute_changes column.');
+
+it('reads activity when the application forbids accessing missing attributes', function (): void {
+    $order = Order::create(['number' => 'CMD-1']);
+
+    logChanges($order, ['old' => ['status' => 'pending'], 'attributes' => ['status' => 'paid']]);
+
+    // activitylog v4 has no attribute_changes column, and a strict application
+    // throws on any read of an attribute the row does not carry.
+    Model::preventAccessingMissingAttributes();
+
+    try {
+        $entries = spatie($order)->paginate(10)->entries;
+    } finally {
+        Model::preventAccessingMissingAttributes(false);
+    }
+
+    expect($entries[0]->changes()->count())->toBe(1);
 });
 
 it('orders activities newest first and can reverse', function (): void {

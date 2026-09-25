@@ -164,3 +164,16 @@ it('applies its column span to its root element like any Filament widget', funct
         ->toContain('lg:fi-grid-col-span')
         ->toContain('--col-span-lg: 1 / -1');
 });
+
+it('shows the changes activitylog logged, whichever version recorded them', function (): void {
+    $user = User::create(['name' => 'Alexandre']);
+    $order = Order::create(['number' => 'CMD-1']);
+
+    logChanges($order, ['old' => ['status' => 'pending'], 'attributes' => ['status' => 'paid']], causer: $user);
+
+    Livewire::test(ActivityTimelineWidget::class, ['record' => $order, 'source' => 'spatie'])
+        ->assertOk()
+        ->assertSee('1 change')
+        ->assertSee('pending')
+        ->assertSee('paid');
+});

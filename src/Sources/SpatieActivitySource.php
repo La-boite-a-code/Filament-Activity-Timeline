@@ -118,10 +118,14 @@ final class SpatieActivitySource implements ActivitySource
 
     protected function normalize(Model $activity): TimelineEntry
     {
-        $properties = $activity->getAttribute('properties');
-        $properties = is_object($properties) && method_exists($properties, 'toArray')
-            ? $properties->toArray()
-            : (is_array($properties) ? $properties : []);
+        // activitylog v5 records a model's changes in their own column, where
+        // v4 kept them inside the properties. Merging them over the properties
+        // gives every version the same shape, and a v5 activity logged with
+        // withProperties() alone keeps the changes it carries there.
+        $properties = array_merge(
+            $this->arrayAttribute($activity, 'properties'),
+            $this->arrayAttribute($activity, 'attribute_changes'),
+        );
 
         $subjectType = $activity->getAttribute('subject_type');
         $createdAt = $activity->getAttribute('created_at');
@@ -140,8 +144,33 @@ final class SpatieActivitySource implements ActivitySource
             occurredAt: $createdAt !== null
                 ? CarbonImmutable::instance($createdAt)
                 : CarbonImmutable::now(),
-            batchUuid: $this->stringOrNull($activity->getAttribute('batch_uuid')),
+            batchUuid: $this->stringOrNull($this->attribute($activity, 'batch_uuid')),
         );
+    }
+
+    /**
+     * Reads a column only one activitylog version has: v4 has no
+     * attribute_changes and v5 no batch_uuid. Reading a column the row does
+     * not carry throws in an application that prevents accessing missing
+     * attributes, so it is read as null instead.
+     */
+    protected function attribute(Model $activity, string $key): mixed
+    {
+        return $activity->hasAttribute($key) ? $activity->getAttribute($key) : null;
+    }
+
+    /**
+     * @return array<array-key, mixed>
+     */
+    protected function arrayAttribute(Model $activity, string $key): array
+    {
+        $value = $this->attribute($activity, $key);
+
+        if (is_object($value) && method_exists($value, 'toArray')) {
+            $value = $value->toArray();
+        }
+
+        return is_array($value) ? $value : [];
     }
 
     protected function resolveMorphClass(string $type): string
