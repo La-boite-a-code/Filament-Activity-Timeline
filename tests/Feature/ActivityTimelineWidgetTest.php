@@ -146,3 +146,21 @@ it('loads more without duplicating entries', function (): void {
     $component->assertSet('perPage', 2);
     $component->call('loadMore')->assertSet('perPage', 4);
 });
+
+it('applies its column span to its root element like any Filament widget', function (): void {
+    $order = Order::create(['number' => 'CMD-1']);
+
+    $html = Livewire::test(ActivityTimelineWidget::class, ['record' => $order, 'source' => 'spatie'])
+        ->html();
+
+    // A page lays its header and footer widgets out on a grid and each widget
+    // places itself in it through its root element, so a span the root does
+    // not carry is lost and the timeline falls back to a single column.
+    preg_match('/<div\b[^>]*>/', $html, $root);
+
+    expect($root[0] ?? '')
+        ->toContain('fi-wi-widget')
+        ->toContain('fi-at')
+        ->toContain('lg:fi-grid-col-span')
+        ->toContain('--col-span-lg: 1 / -1');
+});
