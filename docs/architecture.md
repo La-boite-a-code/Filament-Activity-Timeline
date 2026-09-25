@@ -36,7 +36,10 @@ carries the raw `properties`, the (possibly null) causer and subject, and the
 subject type and id so a deleted subject can still be presented from a snapshot.
 `Data\ChangeSet` is a defensive view over the `old` and `attributes` arrays that
 never assumes a shape without checking it, so malformed properties can never
-crash a render.
+crash a render. activitylog v5 records those arrays in their own
+`attribute_changes` column rather than in `properties`, so the Spatie source
+merges that column over the properties and every version reaches the
+presentation layer in the same shape.
 
 ### Semantic presentation
 
