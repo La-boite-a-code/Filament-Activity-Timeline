@@ -5,6 +5,14 @@ All notable changes to `filament-activity-timeline` will be documented in this f
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Fixed
+
+- `ActivityTimelineWidget` now honours its column span. A page lays its header and footer widgets out on a grid (two columns by default) and Filament applies a widget's span through the `<x-filament-widgets::widget>` wrapper, which the widget view did not use: the `'full'` span never reached the page and the timeline only took half of its width. The view now renders inside that wrapper, so `$columnSpan` and `$columnStart` work as on any Filament widget ([#2](https://github.com/la-boite-a-code/filament-activity-timeline/issues/2)).
+- With `spatie/laravel-activitylog` v5, the timeline showed no field changes. v5 records a model's changes in their own `attribute_changes` column, where v4 kept them inside `properties`, and the Spatie source only read `properties`. It now merges `attribute_changes` over `properties`, so both versions render the same changes, including activities logged before the upgrade ([#3](https://github.com/la-boite-a-code/filament-activity-timeline/issues/3)).
+- With `spatie/laravel-activitylog` v5, an application that prevents accessing missing attributes (`Model::shouldBeStrict()`) rendered the error state instead of the timeline: v5 dropped the `batch_uuid` column the Spatie source read on every activity. The source now only reads a column the row carries, which also keeps the new `attribute_changes` read safe on v4.
+
 ## [1.0.2] - 2026-09-22
 
 ### Security
@@ -64,6 +72,7 @@ First stable release.
 - Light and dark themes, responsive and accessible markup.
 - Support for Filament 4 and 5, Laravel 12 and 13, PHP 8.3 to 8.5.
 
+[Unreleased]: https://github.com/la-boite-a-code/filament-activity-timeline/compare/v1.0.2...HEAD
 [1.0.2]: https://github.com/la-boite-a-code/filament-activity-timeline/compare/v1.0.1...v1.0.2
 [1.0.1]: https://github.com/la-boite-a-code/filament-activity-timeline/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/la-boite-a-code/filament-activity-timeline/compare/v0.1.0...v1.0.0
